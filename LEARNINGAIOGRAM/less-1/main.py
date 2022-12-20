@@ -1,5 +1,8 @@
 import random
 import aiogram
+
+from sqlite import db_start,create_profile,edit_profile
+
 from aiogram import Bot, Dispatcher, executor, types,exceptions
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove,InlineKeyboardButton,InlineKeyboardMarkup
 from aiogram.dispatcher.filters import Text
@@ -59,6 +62,7 @@ ikb.add(ib).insert(ib2).add(ib3)
 
 async def on_startup(_):
 	print('Bot was successfully started!')
+	await db_start()
 
 async def send_random(message: types.Message):
 	randomPhoto = random.choice(list(photos.keys()))
@@ -73,6 +77,8 @@ async def start_cm(message:types.Message):
 	await message.answer('<em>Wellcome to our Telegram Bot!</em>', parse_mode="HTML",
 						 reply_markup=keyboard
 						 )
+
+	await create_profile(user_id=message.from_user.id)
 
 @dp.message_handler(commands=['help'])
 async def help(message:types.Message):
